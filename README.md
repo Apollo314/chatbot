@@ -1,6 +1,6 @@
 # Chat Bot (chatbot)
 
-A bot that chats
+not a real chatbot. but just the ui of it. it'll write back a lorem ipsum. it's a clone of chatgpt ui.
 
 ## Install the dependencies
 ```bash
