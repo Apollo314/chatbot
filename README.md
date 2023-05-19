@@ -2,6 +2,8 @@
 
 not a real chatbot. but just the ui of it. it'll write back a lorem ipsum. it's a clone of chatgpt ui.
 
+you can see it live: https://apollo314.github.io/chatbot/#/
+
 ## Install the dependencies
 ```bash
 yarn
