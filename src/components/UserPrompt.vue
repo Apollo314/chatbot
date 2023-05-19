@@ -40,7 +40,13 @@
             class="absolute column justify-center q-pr-sm"
             style="right: 0; bottom: 0; height: 52px"
           >
-            <q-btn :disabled="!prompt" dense class="rounded" flat>
+            <q-btn
+              :disabled="!prompt"
+              dense
+              class="rounded"
+              flat
+              @click="request"
+            >
               <q-icon class="rotate-315" name="send" />
             </q-btn>
           </div>
