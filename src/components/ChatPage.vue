@@ -25,7 +25,12 @@
               <TypeWriter
                 :text="conversation.response"
                 @typed-char="scrollBottom"
+                @done-typing="isGenerating = false"
+                v-if="conversation.animate"
               ></TypeWriter>
+              <div v-else>
+                {{ conversation.response }}
+              </div>
             </q-item-section>
           </q-item>
         </div>
@@ -42,6 +47,7 @@
         icon="arrow_downward"
         color="primary"
         style="z-index: 4001"
+        v-if="!stickToBottom"
         @click="
           stickToBottom = true;
           scrollBottom();
@@ -52,17 +58,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import TypeWriter from './TypeWriter.vue';
 import { useScroll } from '@vueuse/core';
 
 export type Conversation = {
   prompt: string;
   response: string;
+  animate?: boolean;
 };
 
-defineProps<{
-  conversations: Conversation[];
+const props = defineProps<{
+  /**
+   * ex: history that doesn't need to be typewritten.
+   */
+  initial_conversations: Conversation[];
   dark?: boolean;
 }>();
 
@@ -70,6 +80,8 @@ defineEmits<{
   (e: 'update:conversations', value: Conversation[]): void;
 }>();
 
+const isGenerating = ref(false);
+const conversations = ref([...props.initial_conversations]);
 const chatPage = ref<HTMLElement>();
 const stickToBottom = ref(true);
 
@@ -79,7 +91,7 @@ function scrollBottom() {
   }
 }
 
-const { directions } = useScroll(chatPage);
+const { directions, arrivedState } = useScroll(chatPage);
 
 watch(
   () => directions.top,
@@ -89,6 +101,32 @@ watch(
     }
   }
 );
+
+watch(
+  () => arrivedState.bottom,
+  () => {
+    if (arrivedState.bottom) {
+      stickToBottom.value = true;
+    }
+  }
+);
+
+onMounted(() => {
+  scrollBottom();
+});
+
+const addConversation = (conversation: Conversation, animate = true) => {
+  stickToBottom.value = true;
+  conversation.animate = animate;
+  conversations.value.push(conversation);
+  isGenerating.value = true;
+};
+
+defineExpose({
+  addConversation,
+  isGenerating,
+  conversations,
+});
 </script>
 
 <style lang="scss">

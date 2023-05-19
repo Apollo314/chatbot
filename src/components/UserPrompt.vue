@@ -53,10 +53,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-defineProps<{
+const props = defineProps<{
   isGenerating: boolean;
   generated: boolean;
   dark?: boolean;
+  lastPrompt?: string;
 }>();
 
 const emit = defineEmits<{
@@ -65,7 +66,7 @@ const emit = defineEmits<{
 }>();
 
 const prompt = ref<string>('');
-const lastPrompt = ref<string>('');
+const lastPrompt = ref<string>(props.lastPrompt || '');
 
 const request = () => {
   emit('prompt', prompt.value);
