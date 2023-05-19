@@ -23,6 +23,7 @@
       :generated="!!chatPage?.conversations.length"
       :dark="$q.dark.isActive"
       @prompt="request"
+      @stop-generation="chatPage?.cancelTypewriter()"
     ></user-prompt>
   </q-page>
 </template>

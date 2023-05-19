@@ -27,16 +27,25 @@ const emit = defineEmits<{
 
 const writtenString = ref('');
 const index = ref(0);
+const interval = ref<NodeJS.Timeout>();
 
 onMounted(() => {
-  const interval = setInterval(() => {
+  interval.value = setInterval(() => {
     writtenString.value = props.text.slice(0, index.value++);
     emit('typedChar');
     if (index.value > props.text.length) {
-      clearInterval(interval);
-      emit('doneTyping');
+      cancelTypewriter();
     }
   }, 1000 / props.speed);
+});
+
+function cancelTypewriter() {
+  clearInterval(interval.value);
+  emit('doneTyping');
+}
+
+defineExpose({
+  cancelTypewriter,
 });
 </script>
 

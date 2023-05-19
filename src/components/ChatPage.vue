@@ -27,6 +27,7 @@
                 @typed-char="scrollBottom"
                 @done-typing="isGenerating = false"
                 v-if="conversation.animate"
+                :ref="($event) => typeWriters.set(i, $event)"
               ></TypeWriter>
               <div v-else>
                 {{ conversation.response }}
@@ -84,6 +85,7 @@ const isGenerating = ref(false);
 const conversations = ref([...props.initial_conversations]);
 const chatPage = ref<HTMLElement>();
 const stickToBottom = ref(true);
+const typeWriters = ref(new Map<number, unknown>());
 
 function scrollBottom() {
   if (stickToBottom.value) {
@@ -122,10 +124,19 @@ const addConversation = (conversation: Conversation, animate = true) => {
   isGenerating.value = true;
 };
 
+function cancelTypewriter() {
+  (
+    typeWriters.value.get(conversations.value.length - 1) as InstanceType<
+      typeof TypeWriter
+    >
+  ).cancelTypewriter();
+}
+
 defineExpose({
   addConversation,
   isGenerating,
   conversations,
+  cancelTypewriter,
 });
 </script>
 
