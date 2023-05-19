@@ -20,14 +20,21 @@ const props = withDefaults(
   }
 );
 
+const emit = defineEmits<{
+  (e: 'doneTyping'): void;
+  (e: 'typedChar'): void;
+}>();
+
 const writtenString = ref('');
 const index = ref(0);
 
 onMounted(() => {
   const interval = setInterval(() => {
     writtenString.value = props.text.slice(0, index.value++);
+    emit('typedChar');
     if (index.value > props.text.length) {
       clearInterval(interval);
+      emit('doneTyping');
     }
   }, 1000 / props.speed);
 });

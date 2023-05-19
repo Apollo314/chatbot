@@ -31,12 +31,30 @@
         </div>
       </div>
     </div>
+    <q-page-sticky
+      position="bottom-right"
+      style="z-index: 4000"
+      :offset="[18, 18]"
+    >
+      <q-btn
+        round
+        dense
+        icon="arrow_downward"
+        color="primary"
+        style="z-index: 4001"
+        @click="
+          stickToBottom = true;
+          scrollBottom();
+        "
+      />
+    </q-page-sticky>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import TypeWriter from './TypeWriter.vue';
+import { useScroll } from '@vueuse/core';
 
 export type Conversation = {
   prompt: string;
@@ -48,15 +66,29 @@ defineProps<{
   dark?: boolean;
 }>();
 
-const emit = defineEmits<{
+defineEmits<{
   (e: 'update:conversations', value: Conversation[]): void;
 }>();
 
 const chatPage = ref<HTMLElement>();
+const stickToBottom = ref(true);
 
 function scrollBottom() {
-  chatPage.value?.scrollBy({ top: 100 });
+  if (stickToBottom.value) {
+    chatPage.value?.scrollTo(0, chatPage.value.scrollHeight);
+  }
 }
+
+const { directions } = useScroll(chatPage);
+
+watch(
+  () => directions.top,
+  () => {
+    if (directions.top) {
+      stickToBottom.value = false;
+    }
+  }
+);
 </script>
 
 <style lang="scss">

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "@vueuse/core": "^10.1.2",
     "axios": "^1.2.1",
     "quasar": "^2.6.0",
     "uuid": "^9.0.0",
