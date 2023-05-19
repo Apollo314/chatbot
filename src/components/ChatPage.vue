@@ -40,7 +40,7 @@
     <q-page-sticky
       position="bottom-right"
       style="z-index: 4000"
-      :offset="[18, 18]"
+      :offset="[18, 90]"
     >
       <q-btn
         round
