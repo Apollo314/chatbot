@@ -10,6 +10,7 @@
 
 const { configure } = require('quasar/wrappers');
 const path = require('path');
+const { createHtmlPlugin } = require('vite-plugin-html');
 
 module.exports = configure(function (/* ctx */) {
   return {
@@ -28,7 +29,8 @@ module.exports = configure(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ['i18n', 'axios'],
+    // boot: ['i18n', 'axios'],
+    boot: [],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ['app.scss'],
@@ -53,7 +55,14 @@ module.exports = configure(function (/* ctx */) {
         browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
         node: 'node16',
       },
-
+      extendViteConf(viteConf, { isClient, isServer }) {
+        viteConf.rollupOptions = {
+          output: {
+            manualChunks: undefined,
+            inlineDynamicImports: true,
+          },
+        };
+      },
       vueRouterMode: 'hash', // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
@@ -61,7 +70,7 @@ module.exports = configure(function (/* ctx */) {
 
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
-      publicPath: process.env.NODE_ENV === 'production' ? '/chatbot/' : '/',
+      publicPath: process.env.NODE_ENV === 'production' ? '' : '/',
       // analyze: true,
       // env: {},
       // rawDefine: {}
@@ -72,7 +81,6 @@ module.exports = configure(function (/* ctx */) {
 
       // extendViteConf (viteConf) {},
       // viteVuePluginOptions: {},
-
       vitePlugins: [
         [
           '@intlify/vite-plugin-vue-i18n',
